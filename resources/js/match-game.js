@@ -11,14 +11,12 @@ $(document).ready(function() {
   MatchGame.renderCards(values, $game);
   $game.data('textsequence', 0);
   $game.data('timer',0);
-  MatchGame.SimulateWin();
-
-  MatchGame.Boom1();
   
+  //MatchGame.SimulateWin();
 
-  /*$('.card').click(function() {
+  $('.card').click(function() {
     MatchGame.flipCard($(this), $game);
-  });*/ 
+  }); 
 });
 
 /*
