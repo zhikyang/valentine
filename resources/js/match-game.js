@@ -11,9 +11,8 @@ $(document).ready(function() {
   MatchGame.renderCards(values, $game);
   $game.data('textsequence', 0);
   $game.data('timer',0);
-  
-  //MatchGame.SimulateWin();
   var audio = new Audio('resources/media/card-flip.wav'); 
+  //MatchGame.SimulateWin();
   $('.card').click(function() {
     audio.play();
     MatchGame.flipCard($(this), $game);
@@ -58,7 +57,6 @@ MatchGame.renderCards = function(cardValues, $game) {
     'hsl(265, 85%, 65%)',
     'hsl(310, 85%, 65%)',
     'hsl(360, 85%, 65%)'];
-
   /*$game.empty();*/
   $game.data('flippedCards', []);
   $game.data('matchcount', 0 );
@@ -66,10 +64,12 @@ MatchGame.renderCards = function(cardValues, $game) {
   for (var valueIndex = 0; valueIndex < cardValues.length; valueIndex++) {
     var value = cardValues[valueIndex];
     var color = colors[value - 1];
+    var img = 'url(resources/images/maui27-compress/'+(valueIndex+1)+'.png';
     var data = {
       value: value,
       color: color,
-      isFlipped: false
+      isFlipped: false,
+      img: img
     };
 
     var $cardElement = $('<div class="col-xs-3 card"></div>');
@@ -85,13 +85,16 @@ MatchGame.renderCards = function(cardValues, $game) {
  */
 
 MatchGame.flipCard = function($card, $game) {
+  var audio2 = new Audio('resources/media/ding-dong.wav');
   if ($card.data('isFlipped')) {
     return;
   }
 
   $card.css('background-color', $card.data('color'))
+      .css('background-image', $card.data('img'))
       .text($card.data('value'))
       .data('isFlipped', true);
+
 
   var flippedCards = $game.data('flippedCards');
   flippedCards.push($card);
@@ -102,6 +105,7 @@ MatchGame.flipCard = function($card, $game) {
         backgroundColor: 'rgb(153, 153, 153)',
         color: 'rgb(204, 204, 204)'
       };
+      audio2.play();
       flippedCards[0].css(matchCss);
       flippedCards[1].css(matchCss);
       console.log('test: matchcount addition before.......');
@@ -115,12 +119,14 @@ MatchGame.flipCard = function($card, $game) {
       
       window.setTimeout(function() {
         card1.css('background-color', 'rgb(32, 64, 86)')
+            .css('background-image', 'none')
             .text('')
             .data('isFlipped', false);
         card2.css('background-color', 'rgb(32, 64, 86)')
+            .css('background-image', 'none')
             .text('')
             .data('isFlipped', false);
-      }, 350);
+      }, 200);
     }
     $game.data('flippedCards', []);
   }
@@ -148,7 +154,7 @@ MatchGame.Boom1 = function () {
 
   else if ($('#game').data('textsequence')== 1){
     console.log('textsequence 1: adding V texts on wrong place............');
-    var text = 'Hey There..........Oh! Wrong Place...uhhhh HOLD ON!';
+    var text = 'Hey There..........Oh! Wrong Place...uhhhh HOLD ON!!!!!!!!!';
     
     var i = 0;
     typeWriter();
@@ -167,9 +173,11 @@ MatchGame.Boom1 = function () {
         clearTimeout(setTimer);
         var z = $('#game').data('textsequence');
         $('#game').data('textsequence', z+1);
+
         $('#game').css("position","relative");
-        $('#valentine-overall-overlay').fadeIn('slow');
-        MatchGame.Boom1();
+        $('#valentine-overall-overlay').fadeIn(1000, function(){
+            MatchGame.Boom1();
+        });
       }
     }
   }
@@ -185,16 +193,17 @@ MatchGame.Boom1 = function () {
   }
 
   else if ($('#game').data('textsequence')== 3){
+    var speed=2000;
     console.log('textsequence 3: adding V texts on right place............');
-    $('#valentine-overall-overlay').fadeOut('slow');
-    $('#valentine-top-overlay').fadeIn(600);
-    $('#valentine-top-overlay').fadeOut(2000, function(){
-      $('#valentine-top2-overlay').fadeIn('slow', function(){
-        $('#valentine-top2-overlay').fadeOut(2000, function(){
-          $('#valentine-top3-overlay').fadeIn('slow', function(){
-            $('#valentine-top3-overlay').fadeOut(2000, function(){
-              $('#valentine-bottom-overlay').fadeIn('slow', function(){
-                  setTimeout(function(){MatchGame.Coolstuff()}, 2000);
+    $('#valentine-overall-overlay').fadeOut(speed);
+    $('#valentine-top-overlay').fadeIn(speed);
+    $('#valentine-top-overlay').fadeOut(speed, function(){
+      $('#valentine-top2-overlay').fadeIn(speed, function(){
+        $('#valentine-top2-overlay').fadeOut(speed, function(){
+          $('#valentine-top3-overlay').fadeIn(speed, function(){
+            $('#valentine-top3-overlay').fadeOut(speed, function(){
+              $('#valentine-bottom-overlay').fadeIn(speed, function(){
+                  setTimeout(function(){MatchGame.Coolstuff()}, speed);
               });
             });
           });

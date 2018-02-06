@@ -45,7 +45,7 @@ p {
   background-color: rgb(32, 64, 86);
   font-size: 7rem;
   font-weight: 900;
-  color: rgb(255, 255, 255);
+  color: blue;
   cursor: pointer;
 }
 
@@ -115,7 +115,7 @@ p {
   top: 0;
   z-Index: 1000000;
   background-size: cover;
-  font-size: 7rem;
+  font-size: 6rem;
   text-align: center;
   font-weight: bold;
   align-items: center;
