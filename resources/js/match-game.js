@@ -13,8 +13,9 @@ $(document).ready(function() {
   $game.data('timer',0);
   
   //MatchGame.SimulateWin();
-
+  var audio = new Audio('resources/media/card-flip.wav'); 
   $('.card').click(function() {
+    audio.play();
     MatchGame.flipCard($(this), $game);
   }); 
 });
@@ -126,6 +127,8 @@ MatchGame.flipCard = function($card, $game) {
 
   if ($game.data('matchcount') == 8) {
     console.log('YOU WIN');
+    var music = new Audio('resources/media/Christina Perri - A Thousand Years.mp3'); 
+    music.play();
     MatchGame.Boom1();
   }
 };
@@ -138,10 +141,9 @@ MatchGame.Boom1 = function () {
     $('#row1').fadeOut('slow', function(){
       $('.title').replaceWith(" ");
     });
-    $('#row1').fadeIn('fast');
     var i = $('#game').data('textsequence');
     $('#game').data('textsequence', i+1);
-    MatchGame.Boom1();
+    $('#row1').fadeIn('fast', function(){MatchGame.Boom1()});
   }
 
   else if ($('#game').data('textsequence')== 1){
@@ -186,13 +188,14 @@ MatchGame.Boom1 = function () {
     console.log('textsequence 3: adding V texts on right place............');
     $('#valentine-overall-overlay').fadeOut('slow');
     $('#valentine-top-overlay').fadeIn(600);
-    $('#valentine-top-overlay').fadeOut(1000, function(){
+    $('#valentine-top-overlay').fadeOut(2000, function(){
       $('#valentine-top2-overlay').fadeIn('slow', function(){
-        $('#valentine-top2-overlay').fadeOut(1500, function(){
+        $('#valentine-top2-overlay').fadeOut(2000, function(){
           $('#valentine-top3-overlay').fadeIn('slow', function(){
-            $('#valentine-bottom-overlay').fadeIn('fast');
-            $('#valentine-top3-overlay').fadeOut(1500, function(){
-              MatchGame.Coolstuff();
+            $('#valentine-top3-overlay').fadeOut(2000, function(){
+              $('#valentine-bottom-overlay').fadeIn('slow', function(){
+                  setTimeout(function(){MatchGame.Coolstuff()}, 2000);
+              });
             });
           });
         });
@@ -204,9 +207,6 @@ MatchGame.Boom1 = function () {
   
   else if ($('#game').data('textsequence')== 4){
     console.log('textsequence 4: adding Happy V on right place............');
-    MatchGame.Coolstuff();
-    //$('#valentine-top2-overlay').fadeIn('slow');
-    /*animate in: "Happy Valentine, I Love You"*/
   }
 
   else {
@@ -249,10 +249,13 @@ MatchGame.Coolstuff = function (){
     });
   }
 }
+
+
+
+
 /**simulate when a user had won the game**/
 
 MatchGame.SimulateWin = function(){
-
   $('.card').each(function(){
     $(this).css('background-color', 'rgb(153, 153, 153)')
     .text($(this).data('value'))
