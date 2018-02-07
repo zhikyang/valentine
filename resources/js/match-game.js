@@ -1,5 +1,4 @@
 var MatchGame = {};
-
 /*
   Sets up a new game after HTML document has loaded.
   Renders a 4x4 board of cards.
@@ -19,10 +18,7 @@ $(document).ready(function() {
     MatchGame.flipCard($(this), $game);
   }); 
 });
-
-/*
-  Generates and returns an array of matching card values.
- */
+/* Generates and returns an array of matching card values.*/
 MatchGame.generateCardValues = function () {
   var sequentialValues = [];
 
@@ -41,12 +37,10 @@ MatchGame.generateCardValues = function () {
 
   return cardValues;
 };
-
 /*
   Converts card values to jQuery card objects and adds them to the supplied game
   object.
 */
-
 MatchGame.renderCards = function(cardValues, $game) {
   var colors = [
     'hsl(25, 85%, 65%)',
@@ -131,7 +125,7 @@ MatchGame.flipCard = function($card, $game) {
     //console.log('YOU WIN');
     var music = new Audio('resources/media/Christina Perri - A Thousand Years.mp3'); 
     music.play();
-    MatchGame.Boom1();
+    setTimeout(function(){MatchGame.Boom1()}, 3000);
   }
 };
 
@@ -167,7 +161,7 @@ MatchGame.Boom1 = function () {
     $('#game').data('textsequence', i+1);
 
     $('#row1').fadeOut('slow', function(){
-      $('.title').replaceWith(" ");
+      $('.title').css("visibility","hidden");
     });
 
     $('#row1').fadeIn('fast', function(){MatchGame.Boom1()});
@@ -178,7 +172,7 @@ MatchGame.Boom1 = function () {
     var z = $('#game').data('textsequence');
     $('#game').data('textsequence', z+1);
 
-    var text = 'Hey There..........Oh! Wrong Place...uhhhh HOLD ON!!!!!!!!!';
+    var text = 'Hey There.......Opps! Wrong Place...uhhhh HOLD ON!!!!!!!!!';
     MatchGame.typeWriter($('#valentine'), text, 400)
   }
 
@@ -189,7 +183,6 @@ MatchGame.Boom1 = function () {
 
     $('#game').css("position","relative");
     $('#valentine-overall-overlay').fadeIn(1000, function(){
-      $('.card').fadeTo(1000, 0.4);
       setTimeout(function(){
         $('#valentine').fadeOut(600, function(){
           setTimeout(function(){MatchGame.Boom1()}, 3000)}), 1000})});
@@ -197,14 +190,15 @@ MatchGame.Boom1 = function () {
 
   else if ($('#game').data('textsequence')== 3){
     console.log('textsequence 3: adding typeWriter messages............');
-
-    var text1 = "Hey,";
+    $('.card').fadeTo(1000, 0.4);
+    var text1 = "Hi,";
     var text2 = "The Sky is blue, ";
     var text3 = "Roses are Red, ";
     var text4 = "Sugar is sweet, ";
     var text5 = "So are U =). ";
-    var text6 = "Baby, I know the animate is nerdy, and the poem is corny, but i hope you still like it =). Muah!!! "
-    var text = [ text1, text2, text3, text4, text5, text6];
+    var text6 = "I know the Animation is nerdy, and the Poem is corny, but i hope you still like it =)."
+    var text7 = "Muah!!!"
+    var text = [ text1, text2, text3, text4, text5, text6, text7];
 
     $('#valentine-top-typewriter').fadeIn('fast');
     $('#valentine-overall-overlay').fadeOut(2000);
@@ -213,14 +207,13 @@ MatchGame.Boom1 = function () {
     if(!text[z]) {
       var i = $('#game').data('textsequence');
       $('#game').data('textsequence', i+1);
-      $('#valentine-top-typewriter').fadeOut('slow', MatchGame.Boom1());
+      $('#valentine-top-typewriter').fadeOut(2000, MatchGame.Boom1());
     }
     else {
       $('#game').data('textcounter', z+1);
       $('#valentine-top-typewriter').append('<br />');
       setTimeout(function(){MatchGame.typeWriter($('#valentine-top-typewriter'), text[z], 300)}, 1000);  
     }
-    
   }
 
   else if ($('#game').data('textsequence')== 4){
@@ -229,13 +222,14 @@ MatchGame.Boom1 = function () {
     $('#game').data('textsequence', i+1);
 
     var speed=2000;
-    $('#valentine-top-overlay').fadeIn(speed);
-    $('#valentine-top-overlay').fadeOut(speed, function(){
-      $('#valentine-top2-overlay').fadeIn(speed, function(){
-        $('#valentine-top2-overlay').fadeOut(speed, function(){
-          $('#valentine-top3-overlay').fadeIn(speed, function(){
-            $('#valentine-top3-overlay').fadeOut(speed, function(){
-              $('#valentine-bottom-overlay').fadeIn(speed, function(){
+
+  $('#valentine-bottom-overlay').fadeIn(speed, function(){
+    $('#valentine-top-overlay').fadeIn(speed, function(){
+      $('#valentine-top-overlay').fadeOut(speed, function(){
+        $('#valentine-top2-overlay').fadeIn(speed, function(){
+          $('#valentine-top2-overlay').fadeOut(speed, function(){
+            $('#valentine-top3-overlay').fadeIn(speed, function(){
+              $('#valentine-top3-overlay').fadeOut(speed, function(){
                   setTimeout(function(){   
                     $('#valentine-background-overlay').fadeIn(speed, function(){
                       $('#valentine-background-overlay2').fadeIn(speed, function(){
@@ -244,7 +238,8 @@ MatchGame.Boom1 = function () {
                               });
                             });
                           });
-                }, speed);
+                  }, speed);
+                });
               });
             });
           });
@@ -269,7 +264,6 @@ MatchGame.SimulateWin = function(){
   var music = new Audio('resources/media/Christina Perri - A Thousand Years.mp3'); 
   music.play();
   MatchGame.Boom1();
-
 }
 
 
