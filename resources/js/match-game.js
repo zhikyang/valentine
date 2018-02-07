@@ -11,6 +11,7 @@ $(document).ready(function() {
   MatchGame.renderCards(values, $game);
   $game.data('textsequence', 0);
   $game.data('timer',0);
+  $game.data('textcounter', 0);  
   var audio = new Audio('resources/media/card-flip.wav'); 
   //MatchGame.SimulateWin();
   $('.card').click(function() {
@@ -22,7 +23,6 @@ $(document).ready(function() {
 /*
   Generates and returns an array of matching card values.
  */
-
 MatchGame.generateCardValues = function () {
   var sequentialValues = [];
 
@@ -71,10 +71,8 @@ MatchGame.renderCards = function(cardValues, $game) {
       isFlipped: false,
       img: img
     };
-
     var $cardElement = $('<div class="col-xs-3 card"></div>');
     $cardElement.data(data);
-
     $game.append($cardElement);
   }
 };
@@ -90,29 +88,27 @@ MatchGame.flipCard = function($card, $game) {
     return;
   }
 
-  $card.css('background-color', $card.data('color'))
+  $card.css('color', $card.data('color'))
       .css('background-image', $card.data('img'))
       .text($card.data('value'))
       .data('isFlipped', true);
-
 
   var flippedCards = $game.data('flippedCards');
   flippedCards.push($card);
 
   if (flippedCards.length === 2) {
     if (flippedCards[0].data('value') === flippedCards[1].data('value')) {
+      audio2.play();
       var matchCss = {
         backgroundColor: 'rgb(153, 153, 153)',
         color: 'rgb(204, 204, 204)'
       };
-      audio2.play();
       flippedCards[0].css(matchCss);
       flippedCards[1].css(matchCss);
-      console.log('test: matchcount addition before.......');
+      //console.log('test: matchcount addition before.......');
       $game.data('matchcount', $game.data('matchcount')+1);
-      console.log('test: matchcount addition after.......');
-      console.log('test: matchcount:' + $game.data('matchcount'));
-
+      //console.log('test: matchcount addition after.......');
+      //console.log('test: matchcount:' + $game.data('matchcount'));
     } else {
       var card1 = flippedCards[0];
       var card2 = flippedCards[1];
@@ -132,38 +128,23 @@ MatchGame.flipCard = function($card, $game) {
   }
 
   if ($game.data('matchcount') == 8) {
-    console.log('YOU WIN');
+    //console.log('YOU WIN');
     var music = new Audio('resources/media/Christina Perri - A Thousand Years.mp3'); 
     music.play();
     MatchGame.Boom1();
   }
 };
 
-/* -------Boom Boom Boom!-------*/
-MatchGame.Boom1 = function () {
-  
-  if($('#game').data('textsequence')== 0){
-    console.log('textsequence 0: deleting game texts...........');
-    $('#row1').fadeOut('slow', function(){
-      $('.title').replaceWith(" ");
-    });
-    var i = $('#game').data('textsequence');
-    $('#game').data('textsequence', i+1);
-    $('#row1').fadeIn('fast', function(){MatchGame.Boom1()});
-  }
+/* -------Game.TypeWriter-------*/
 
-  else if ($('#game').data('textsequence')== 1){
-    console.log('textsequence 1: adding V texts on wrong place............');
-    var text = 'Hey There..........Oh! Wrong Place...uhhhh HOLD ON!!!!!!!!!';
-    
+MatchGame.typeWriter = function ($element, text, speed) {
     var i = 0;
     typeWriter();
 
     function typeWriter(){
-      var random = Math.floor(Math.random() * 400);
+      var random = Math.floor(Math.random() * speed);
       var setTimer = setTimeout(typeWriter, random);
-      $('#valentine').append(text[i]);
-
+      $element.append(text[i]);
     /*console.log('output setimer:'+ setTimer);
     console.log('output text[i] value:' + text[i]);*/
       i++;
@@ -171,31 +152,83 @@ MatchGame.Boom1 = function () {
       if(!text[i]) {
         console.log('return timeout value.........' + setTimer);
         clearTimeout(setTimer);
-        var z = $('#game').data('textsequence');
-        $('#game').data('textsequence', z+1);
 
-        $('#game').css("position","relative");
-        $('#valentine-overall-overlay').fadeIn(1000, function(){
-            MatchGame.Boom1();
-        });
+        MatchGame.Boom1();
       }
     }
+}
+
+/* -------Boom Boom Boom!-------*/
+MatchGame.Boom1 = function () {
+  
+  if($('#game').data('textsequence')== 0){
+    console.log('textsequence 0: deleting game texts...........');
+    var i = $('#game').data('textsequence');
+    $('#game').data('textsequence', i+1);
+
+    $('#row1').fadeOut('slow', function(){
+      $('.title').replaceWith(" ");
+    });
+
+    $('#row1').fadeIn('fast', function(){MatchGame.Boom1()});
+  }
+
+  else if ($('#game').data('textsequence')== 1){
+    console.log('textsequence 1: adding V texts on wrong place............');        
+    var z = $('#game').data('textsequence');
+    $('#game').data('textsequence', z+1);
+
+    var text = 'Hey There..........Oh! Wrong Place...uhhhh HOLD ON!!!!!!!!!';
+    MatchGame.typeWriter($('#valentine'), text, 400)
   }
 
   else if ($('#game').data('textsequence')== 2){
     console.log('textsequence 2: deleting V texts on wrong place............');
-    var timeout = setTimeout(function(){$('#valentine').fadeOut(600)},1000);
-    $('#game').data('timer', timeout);
-    var i = $('#game').data('textsequence');
-    $('#game').data('textsequence', i+1);
-    setTimeout(function(){MatchGame.Boom1()}, 3000);
-    /*MatchGame.typeDelete($('#valentine'), 100);*/
+    var z = $('#game').data('textsequence');
+    $('#game').data('textsequence', z+1);
+
+    $('#game').css("opacity", 0.5);
+    $('#game').css("position","relative");
+    $('#valentine-overall-overlay').fadeIn(1000, function(){
+      setTimeout(function(){
+        $('#valentine').fadeOut(600, function(){
+          setTimeout(function(){MatchGame.Boom1()}, 3000)}), 1000})});
   }
 
   else if ($('#game').data('textsequence')== 3){
+    console.log('textsequence 3: adding typeWriter messages............');
+
+    var text1 = "Hey,";
+    var text2 = "The Sky is blue, ";
+    var text3 = "Roses are Red, ";
+    var text4 = "Sugar is sweet, ";
+    var text5 = "So are U =). ";
+    var text6 = "Baby, I know the animate is nerdy, and the poem is corny, but i hope you still like it =). Muah!!! "
+    var text = [ text1, text2, text3, text4, text5, text6];
+
+    $('#valentine-top-typewriter').fadeIn('fast');
+    $('#valentine-overall-overlay').fadeOut(2000);
+
+    var z = $('#game').data('textcounter');
+    if(!text[z]) {
+      var i = $('#game').data('textsequence');
+      $('#game').data('textsequence', i+1);
+      $('#valentine-top-typewriter').fadeOut('slow', MatchGame.Boom1());
+    }
+    else {
+      $('#game').data('textcounter', z+1);
+      $('#valentine-top-typewriter').append('<br />');
+      setTimeout(function(){MatchGame.typeWriter($('#valentine-top-typewriter'), text[z], 300)}, 1000);  
+    }
+    
+  }
+
+  else if ($('#game').data('textsequence')== 4){
+    console.log('textsequence 4: adding V texts on right place............');
+    var i = $('#game').data('textsequence');
+    $('#game').data('textsequence', i+1);
+
     var speed=2000;
-    console.log('textsequence 3: adding V texts on right place............');
-    $('#valentine-overall-overlay').fadeOut(speed);
     $('#valentine-top-overlay').fadeIn(speed);
     $('#valentine-top-overlay').fadeOut(speed, function(){
       $('#valentine-top2-overlay').fadeIn(speed, function(){
@@ -203,64 +236,27 @@ MatchGame.Boom1 = function () {
           $('#valentine-top3-overlay').fadeIn(speed, function(){
             $('#valentine-top3-overlay').fadeOut(speed, function(){
               $('#valentine-bottom-overlay').fadeIn(speed, function(){
-                  setTimeout(function(){MatchGame.Coolstuff()}, speed);
+                  setTimeout(function(){   
+                    $('#valentine-background-overlay').fadeIn(speed, function(){
+                      $('#valentine-background-overlay2').fadeIn(speed, function(){
+                        $('#valentine-top4-overlay').fadeIn(speed+1000, function(){
+                          $('#valentine-top4-overlay').css('display','flex');
+                              });
+                            });
+                          });
+                }, speed);
               });
             });
           });
         });
       });
     });
-    var i = $('#game').data('textsequence');
-    $('#game').data('textsequence', i+1);
-}
-  
-  else if ($('#game').data('textsequence')== 4){
-    console.log('textsequence 4: adding Happy V on right place............');
   }
-
+  
   else {
     conole.log('something must be wrong...textsequence: '+ $('#game').data('textsequence'));
   }
-
 }
-
-/*-----------Delete Text--------not completed------------------*/
-MatchGame.typeDelete = function($element, speed){
-
-  var i = $element.text().length - 1;
-  typeDelete ();
-
-  function typeDelete(){
-    var setTimer = setTimeout(typeDelete, speed);
-    $element.text()[i].replaceWith("");
-    i--;
-
-    if($element.text().length == 0){
-      clearTimeout(setTimer);
-      var z = $('#game').data('textsequence');
-      $('#game').data('textsequence', z+1);
-      MatchGame.Boom1();    
-    }
-  }
-}
-
-/**at the end of the game display something cool*/
-MatchGame.Coolstuff = function (){
-  showoverlay();
-
-  function showoverlay(){
-    $('#valentine-background-overlay').fadeIn(2000, function(){
-      $('#valentine-background-overlay2').fadeIn(2000, function(){
-        $('#valentine-top4-overlay').fadeIn(3000, function(){
-          $('#valentine-top4-overlay').css('display','flex');
-        });
-      });
-    });
-  }
-}
-
-
-
 
 /**simulate when a user had won the game**/
 
@@ -270,6 +266,10 @@ MatchGame.SimulateWin = function(){
     .text($(this).data('value'))
     .data('isFlipped', true);
   });
+  var music = new Audio('resources/media/Christina Perri - A Thousand Years.mp3'); 
+  music.play();
+  MatchGame.Boom1();
+
 }
 
 

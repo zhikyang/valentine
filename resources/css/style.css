@@ -45,7 +45,7 @@ p {
   background-color: rgb(32, 64, 86);
   font-size: 7rem;
   font-weight: 900;
-  color: blue;
+  color: black;
   cursor: pointer;
 }
 
@@ -63,6 +63,20 @@ p {
   top: 0;
   z-Index: 1000000;
   background: url(../../heart-loading.gif) no-repeat 50% 50%;
+}
+
+#valentine-top-typewriter {
+  display: none;
+  position: absolute;
+  width: 100%;
+  height: 50%;
+  left: 0;
+  top: 0;
+  z-Index: 1000000;
+  background-size: cover;
+  font-size: 3rem;
+  text-align: center;
+  font-weight: bold;
 }
 
 #valentine-top-overlay {
