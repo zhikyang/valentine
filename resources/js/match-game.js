@@ -187,9 +187,9 @@ MatchGame.Boom1 = function () {
     var z = $('#game').data('textsequence');
     $('#game').data('textsequence', z+1);
 
-    $('#game').css("opacity", 0.5);
     $('#game').css("position","relative");
     $('#valentine-overall-overlay').fadeIn(1000, function(){
+      $('.card').fadeTo(1000, 0.4);
       setTimeout(function(){
         $('#valentine').fadeOut(600, function(){
           setTimeout(function(){MatchGame.Boom1()}, 3000)}), 1000})});
